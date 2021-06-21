@@ -1,7 +1,21 @@
 import EnrollStudent from "./EnrollStudent";
+import EnrollmentRepositoryMemory from "./EnrollmentRepositoryMemory";
+import LevelRespositoryMemory from "./LevelRespositoryMemory";
+import ModuleRespositoryMemory from "./ModuleRespositoryMemory";
+import ClassesRespositoryMemory from "./ClassesRespositoryMemory";
+
+let enrollStudent: EnrollStudent;
+
+beforeEach(()=>{
+    const enrollmentRepository = new EnrollmentRepositoryMemory() ;
+    const levelRepository = new LevelRespositoryMemory() ;
+    const moduleRepository = new ModuleRespositoryMemory() ;
+    const classesRepository = new ClassesRespositoryMemory() ;
+    enrollStudent = new EnrollStudent(levelRepository, moduleRepository, classesRepository, enrollmentRepository);
+});
 
 test("Should not enroll without valid student name", function () {
-    const enrollStudent = new EnrollStudent();
+    
     const enrollmentRequest = {
         student: {
             name: "Ana"
@@ -14,7 +28,6 @@ test("Should not enroll without valid student name", function () {
 });
 
 test("Should not enroll without valid student cpf", function () {
-    const enrollStudent = new EnrollStudent();
     const enrollmentRequest = {
         student: {
             name: "Ana Maria",
@@ -28,7 +41,7 @@ test("Should not enroll without valid student cpf", function () {
 });
 
 test("Should not enroll duplicated student", function () {
-    const enrollStudent = new EnrollStudent();
+    
     const enrollmentRequest = {
         student: {
             name: "Ana Maria",
@@ -43,7 +56,7 @@ test("Should not enroll duplicated student", function () {
 });
 
 test("Should generate enrollment code", ()=> {
-    const enrollStudent = new EnrollStudent();
+    
     const enrollmentRequest = {
             student: {
                 name: "Maria Carolina Fonseca",
@@ -58,7 +71,7 @@ test("Should generate enrollment code", ()=> {
     expect(enrollment.code).toBe("2002EM3A0001"); 
 });
 test("Should not enroll student below minimum age", ()=> {
-    const enrollStudent = new EnrollStudent();
+    
     const enrollmentRequest = {
             student: {
                 name: "Maria Carolina Fonseca",
@@ -72,7 +85,7 @@ test("Should not enroll student below minimum age", ()=> {
     expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(new Error("Student below minimum age"));
 });
 test("Should not enroll student over class capacity", ()=> {
-    const enrollStudent = new EnrollStudent();
+    
     const enrollmentRequest1 = {
             student: {
                 name: "Samantha Sobrenome",

@@ -11,4 +11,10 @@ export default class Student {
         this.cpf = new Cpf(cpf);
         this.birthDate = new Date(birthDate);
     }
+
+    getAge(){
+        const yearCurrent = new Date().getFullYear();
+        const yearStudent = yearCurrent - this.birthDate.getFullYear();
+        return yearStudent;
+    }
 }
