@@ -1,4 +1,5 @@
+import Level from "./Level";
 export default interface LevelRespository {
-    findByCode(code: string): any;
+    findByCode(code: string): Level;
 }
 

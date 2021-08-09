@@ -1,5 +1,8 @@
 import EnrollmentRepository from "./EnrollmentRepository";
 import Enrollment from "./Enrollment";
+import Module from "./Module";
+import Level from "./Level";
+import ClassRoom from "./ClassRoom";
 
 export default class EnrollmentRepositoryMemory implements EnrollmentRepository{
     enrollments: Enrollment[];
@@ -9,10 +12,12 @@ export default class EnrollmentRepositoryMemory implements EnrollmentRepository{
     save(enrollment: Enrollment) {
         this.enrollments.push(enrollment);
     }    
-    findAllByClass(level:string, module: string, classRoom: string) {
-       return this.enrollments.filter(enrollment => enrollment.level === level && enrollment.module === module && enrollment.classRoom === classRoom);
+    findAllByClass(level:Level, module: Module, classRoom: ClassRoom):Enrollment[] {
+       return this.enrollments.filter((enrollment: Enrollment) => {
+            return enrollment.level.code === level.code && enrollment.module.code === module.code && enrollment.classRoom.code === classRoom.code;
+       })
     }
-    findByCpf(cpf: string) {
+    findByCpf(cpf: string): Enrollment | undefined{
         return this.enrollments.find(enrollment => enrollment.student.cpf.value === cpf);
     }
     count() {

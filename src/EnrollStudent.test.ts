@@ -26,7 +26,6 @@ test("Should not enroll without valid student name", function () {
     };
     expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(new Error("Invalid name"));  
 });
-
 test("Should not enroll without valid student cpf", function () {
     const enrollmentRequest = {
         student: {
@@ -39,9 +38,7 @@ test("Should not enroll without valid student cpf", function () {
     };
     expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(new Error("Invalid cpf"));  
 });
-
 test("Should not enroll duplicated student", function () {
-    
     const enrollmentRequest = {
         student: {
             name: "Ana Maria",
@@ -49,12 +46,12 @@ test("Should not enroll duplicated student", function () {
         },
         level: "EM",
         module: "3",
-        classRoom: "A"
+        classRoom: "A",
+        installments: 12
     };
     enrollStudent.execute(enrollmentRequest);
     expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(new Error("Enrollment with duplicated student is not allowed"));
 });
-
 test("Should generate enrollment code", ()=> {
     
     const enrollmentRequest = {
@@ -65,10 +62,11 @@ test("Should generate enrollment code", ()=> {
             },
             level: "EM",
             module: "3",
-            classRoom: "A"
+            classRoom: "A",
+            installments: 12
     }
     const enrollment  = enrollStudent.execute(enrollmentRequest);
-    expect(enrollment.code).toBe("2002EM3A0001"); 
+    expect(enrollment.code.value).toBe("2021EM3A0001"); 
 });
 test("Should not enroll student below minimum age", ()=> {
     
@@ -94,7 +92,8 @@ test("Should not enroll student over class capacity", ()=> {
             },
             level: "EM",
             module: "3",
-            classRoom: "A"
+            classRoom: "A",
+            installments: 12
     }
     const enrollmentRequest2= {
             student: {
@@ -104,7 +103,8 @@ test("Should not enroll student over class capacity", ()=> {
             },
             level: "EM",
             module: "3",
-            classRoom: "A"
+            classRoom: "A",
+            installments: 12
     }
     const enrollmentRequest3= {
             student: {
@@ -114,9 +114,54 @@ test("Should not enroll student over class capacity", ()=> {
             },
             level: "EM",
             module: "3",
-            classRoom: "A"
+            classRoom: "A",
+            installments: 12
     }
     enrollStudent.execute(enrollmentRequest1);
     enrollStudent.execute(enrollmentRequest2);
     expect(() => enrollStudent.execute(enrollmentRequest3)).toThrow(new Error("Class is over capacity"));
 });
+test("Não deve matricular depois do fim das aulas", ()=> {
+    const enrollmentRequest = {
+        student: {
+            name: "Maria Carolina Fonseca",
+            cpf: "755.525.774-26",
+            birthDate: "2002-03-12"
+        },
+        level: "EM",
+        module: "1",
+        classRoom: "B"
+    }
+    expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(new Error("Class is already finished"));
+})
+test("Não deve matricular depois de 25% do início das aulas", ()=> {
+    const enrollmentRequest = {
+        student: {
+            name: "Maria Carolina Fonseca",
+            cpf: "755.525.774-26",
+            birthDate: "2002-03-12"
+        },
+        level: "EM",
+        module: "1",
+        classRoom: "C"
+    }
+    expect(()=> enrollStudent.execute(enrollmentRequest)).toThrow(new Error("Class is already started"));
+})
+test("Deve gerar faturas", ()=> {
+    const enrollmentRequest = {
+        student: {
+            name: "Maria Carolina Fonseca",
+            cpf: "755.525.774-26",
+            birthDate: "2002-03-12"
+        },
+        level: "EM",
+        module: "3",
+        classRoom: "A",
+        installments: 12
+    }
+
+    const enrollment =  enrollStudent.execute(enrollmentRequest)
+    expect(enrollment.invoices).toHaveLength(12);
+    expect(enrollment.invoices[0].amount).toBe(1416.66);
+    expect(enrollment.invoices[11].amount).toBe(1416.73);
+})
