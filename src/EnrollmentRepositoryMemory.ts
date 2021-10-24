@@ -6,8 +6,16 @@ import ClassRoom from "./ClassRoom";
 
 export default class EnrollmentRepositoryMemory implements EnrollmentRepository{
     enrollments: Enrollment[];
+    uuid: Number;
     constructor(){
         this.enrollments = []
+        this.uuid = Math.floor(Math.random() * 100)
+    }
+    get(code: string): Enrollment | undefined {
+        const enrollment = this.enrollments.find(enrollment => {
+            return enrollment.code.value === code
+        })
+        return enrollment;
     }
     save(enrollment: Enrollment) {
         this.enrollments.push(enrollment);

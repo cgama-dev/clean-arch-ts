@@ -6,7 +6,7 @@ export default class Student {
     cpf: Cpf;
     birthDate: Date;
 
-    constructor (name: string, cpf: string, birthDate: Date) {
+    constructor (name: string, cpf: string, birthDate: string) {
         this.name = new Name(name);
         this.cpf = new Cpf(cpf);
         this.birthDate = new Date(birthDate);

@@ -10,7 +10,7 @@ export default class ClassesRespositoryMemory implements ClassesRespository{
                 module: "3",
                 code: "A",
                 capacity: 2,
-                startDate: new Date ("2021-09-01"),
+                startDate: new Date (), // Essa classe sempre inicia do dia atual(o dia que esta testando ...)
                 endDate: new Date ("2021-12-15")
             }),
            new ClassRoom({
@@ -26,8 +26,8 @@ export default class ClassesRespositoryMemory implements ClassesRespository{
                 module: "1",
                 code: "C",
                 capacity: 5,
-                startDate: new Date("2021-07-09"),
-                endDate: new Date("2021-10-07")
+                startDate: new Date("2021-06-09"),
+                endDate: new Date("2021-11-15")
             })
         ]
     }

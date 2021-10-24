@@ -4,6 +4,7 @@ import Module from "./Module";
 import Student from "./Student";
 import EnrollmentCode from "./EnrollmentCode";
 import Invoice from "./Invoice";
+import InvoiceEvent from "./InvoiceEvent";
 export default class Enrollment {
     student: Student;
     level: Level;
@@ -13,7 +14,7 @@ export default class Enrollment {
     issueDate: Date;
     code: EnrollmentCode;
     installments: number;
-    invoices: any[];
+    invoices: Invoice[];
     constructor(
                 student: Student,
                 level: Level, 
@@ -21,7 +22,7 @@ export default class Enrollment {
                 classRoom: ClassRoom, 
                 issueDate: Date,
                 sequence: number,
-                installments: number
+                installments: number = 12
                  ){ 
                     const studentIsMinimumAge = student.getAge() < module.minimumAge;
                     if(studentIsMinimumAge) throw new Error("Student below minimum age");
@@ -50,5 +51,30 @@ export default class Enrollment {
         }, 0);
         const rest = Math.trunc((this.module.price - total)*100)/100
         this.invoices[this.installments - 1].amount = installmentAmount + rest;
+    }
+
+    getInvoiceBalance(){
+        return this.invoices.reduce((total, invoice)=>{
+            total += invoice.getBalance();
+            return total
+        }, 0);
+    }
+
+    getInvoice(month: number, year: number): Invoice | undefined{
+        const invoice = this.invoices.find(invoice => invoice.month === month && invoice.year === year)
+        return invoice;
+    }
+
+    payInvoice (month: number, year: number, amount: number) {
+        const invoice = this.getInvoice(month, year);
+        console.log(invoice);
+        if (!invoice) throw new Error("Invalid invoice");
+        // if (invoice.getStatus(paymentDate) === "overdue") {
+        //     const penalty = invoice.getPenalty(paymentDate);
+        //     const interests = invoice.getInterests(paymentDate);
+        //     invoice.addEvent(new InvoiceEvent("penalty", penalty));
+        //     invoice.addEvent(new InvoiceEvent("interests", interests));
+        // }
+        invoice.addEvent(new InvoiceEvent("payment", amount));
     }
 }
