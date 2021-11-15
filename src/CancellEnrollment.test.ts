@@ -1,21 +1,21 @@
+import CancellEnrollment from './CancellEnrollment';
 import EnrollStudent from "./EnrollStudent";
 import { EnrollStudentDTO } from "./EnrollStudentDTO";
 import GetEnrollment from "./GetEnrollment";
-import PayInvoce from "./PayInvoice";
 import RepositoryMemoryFactory from "./RepositoryMemoryFactory";
 
 let enrollStudent: EnrollStudent;
 let getEnrollment: GetEnrollment;
-let payInvoce: PayInvoce;
+let cancellEnrollment: CancellEnrollment;
 
 beforeEach(() => {
     const respositoryMemoryFactory = new RepositoryMemoryFactory();
     enrollStudent = new EnrollStudent(respositoryMemoryFactory);
     getEnrollment = new GetEnrollment(respositoryMemoryFactory);
-    payInvoce = new PayInvoce(respositoryMemoryFactory);
+    cancellEnrollment = new CancellEnrollment(respositoryMemoryFactory);
 });
 
-test("Shold pay enrollment invoice", () => {
+test.only("Shold cancell enrollment", () => {
     const enrollmentRequest = new EnrollStudentDTO.Input({
         studentName: "Maria Carolina Fonseca",
         studentCpf: "755.525.774-26",
@@ -26,8 +26,7 @@ test("Shold pay enrollment invoice", () => {
         installments: 12
     });
     enrollStudent.execute(enrollmentRequest);
-    payInvoce.execute("2021EM3A0001", 1, 2021, 1416.73)
+    cancellEnrollment.execute("2021EM3A0001");
     const getEnrollmentOutputData = getEnrollment.execute("2021EM3A0001", new Date("2021-11-14"));
-    expect(getEnrollmentOutputData.code).toBe("2021EM3A0001");
-    expect(getEnrollmentOutputData.balance).toBe(15583.4);
+    expect(getEnrollmentOutputData.status).toBe("cancel");
 })

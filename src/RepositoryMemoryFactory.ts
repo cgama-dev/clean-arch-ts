@@ -1,5 +1,4 @@
 import ClassesRespositoryMemory from "./ClassesRespositoryMemory"
-import EnrollmentRepositoryMemory from "./EnrollmentRepositoryMemory"
 import EnrollmentRepositoryMemorySingleton from "./EnrollmentRepositoryMemorySingleton"
 import LevelRespositoryMemory from "./LevelRespositoryMemory"
 import ModuleRespositoryMemory from "./ModuleRespositoryMemory"
@@ -7,7 +6,7 @@ import RepositoryAbstractFactory from "./RepositoryAbstractFactory"
 
 export default class RepositoryMemoryFactory implements RepositoryAbstractFactory {
 
-    constructor(){
+    constructor() {
         EnrollmentRepositoryMemorySingleton.destroy();
     }
     createLevelRepository() {
