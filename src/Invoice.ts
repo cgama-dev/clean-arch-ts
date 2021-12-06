@@ -1,3 +1,4 @@
+
 import InvoiceEvent from "./InvoiceEvent";
 
 export default class Invoice {
@@ -8,7 +9,7 @@ export default class Invoice {
     dueDate: Date;
     events: InvoiceEvent[];
 
-    constructor (code: string, month: number, year: number, amount: number) {
+    constructor(code: string, month: number, year: number, amount: number) {
         this.code = code;
         this.month = month;
         this.year = year;
@@ -17,41 +18,40 @@ export default class Invoice {
         this.events = [];
     }
 
-
-    addEvent (invoiceEvent: InvoiceEvent) {
+    addEvent(invoiceEvent: InvoiceEvent) {
         this.events.push(invoiceEvent);
     }
 
-    getBalance () {
+    getBalance() {
         const balance = this.events.reduce((total, event) => {
             if (event.type === "payment") total -= event.amount;
             if (event.type === "penalty") total += event.amount;
             if (event.type === "interests") total += event.amount;
             return total;
         }, this.amount);
-        return Math.abs(Math.round(balance*100)/100);
+        return Math.abs(Math.round(balance * 100) / 100);
     }
 
-    getStatus (currentDate: Date) {
+    getStatus(currentDate: Date) {
         if (this.getBalance() === 0) return "paid";
         if (currentDate.getTime() > this.dueDate.getTime()) return "overdue";
         return "open";
     }
 
-    getPenalty (currentDate: Date) {
+    getPenalty(currentDate: Date) {
         if (this.getStatus(currentDate) !== "overdue") return 0;
         const balance = this.getBalance();
-        return Math.round((balance * 0.1)*100)/100;
+        return Math.round((balance * 0.1) * 100) / 100;
     }
 
-    getInterests (currentDate: Date) {
+    getInterests(currentDate: Date) {
         if (this.getStatus(currentDate) !== "overdue") return 0;
         const balance = this.getBalance();
-        const dueDays = Math.floor((currentDate.getTime() - this.dueDate.getTime())/(1000*60*60*24));
-        return Math.round((balance * 0.01 * dueDays)*100)/100;
+        const dueDays = Math.floor((currentDate.getTime() - this.dueDate.getTime()) / (1000 * 60 * 60 * 24));
+        return Math.round((balance * 0.01 * dueDays) * 100) / 100;
     }
 
-    clone () {
+    clone() {
         return JSON.parse(JSON.stringify(this));
     }
 }

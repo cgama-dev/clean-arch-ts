@@ -21,7 +21,7 @@ export default class Enrollment {
         level: Level,
         module: Module,
         classRoom: ClassRoom,
-        issueDate: Date,
+        issueDate: Date, //Data atual
         sequence: number,
         installments: number = 12
     ) {
@@ -67,15 +67,15 @@ export default class Enrollment {
         return invoice;
     }
 
-    payInvoice(month: number, year: number, amount: number) {
+    payInvoice(month: number, year: number, amount: number, paymentDate: Date): void{
         const invoice = this.getInvoice(month, year);
         if (!invoice) throw new Error("Invalid invoice");
-        // if (invoice.getStatus(paymentDate) === "overdue") {
-        //     const penalty = invoice.getPenalty(paymentDate);
-        //     const interests = invoice.getInterests(paymentDate);
-        //     invoice.addEvent(new InvoiceEvent("penalty", penalty));
-        //     invoice.addEvent(new InvoiceEvent("interests", interests));
-        // }
+        if (invoice.getStatus(paymentDate) === "overdue") {
+            const penalty = invoice.getPenalty(paymentDate);
+            const interests = invoice.getInterests(paymentDate);
+            invoice.addEvent(new InvoiceEvent("penalty", penalty));
+            invoice.addEvent(new InvoiceEvent("interests", interests));
+        }
         invoice.addEvent(new InvoiceEvent("payment", amount));
     }
 }

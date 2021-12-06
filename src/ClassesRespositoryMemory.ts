@@ -27,7 +27,7 @@ export default class ClassesRespositoryMemory implements ClassesRespository {
                 code: "C",
                 capacity: 5,
                 startDate: new Date("2021-08-09"),
-                endDate: new Date("2021-11-31")
+                endDate: new Date("2022-01-31") // Deve ser maior que a data atual
             })
         ]
     }

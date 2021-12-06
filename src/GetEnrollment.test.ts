@@ -45,8 +45,6 @@ test("Shold calculate due date and return status open or overdue for each invoce
     expect(getEnrollmentOutputData.invoices[0].status).toBe("overdue");
     expect(getEnrollmentOutputData.invoices[11].dueDate.toISOString()).toBe("2021-12-05T03:00:00.000Z");
     expect(getEnrollmentOutputData.invoices[11].status).toBe("open");
-
-    // console.log(getEnrollmentOutputData)
 })
 test("Shold calculate due date and interests", () => {
     const enrollmentRequest = new EnrollStudentDTO.Input({
